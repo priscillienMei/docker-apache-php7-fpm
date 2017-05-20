@@ -4,30 +4,43 @@ MAINTAINER Andrew Beveridge <andrew@beveridge.uk>
 ENV REFRESHED_AT 2017-05-20
 ENV HTTPD_PREFIX /etc/apache2
 
+# Suppress warnings from apt about lack of Dialog
+ENV DEBIAN_FRONTEND noninteractive
+
 LABEL maintainer="Andrew Beveridge <andrew@beveridge.uk>" \
       org.label-schema.docker.dockerfile="/Dockerfile" \
       org.label-schema.name="Ubuntu 16.04 with Apache2.4 and PHP 7, optimised using PHP-FPM" \
       org.label-schema.url="https://andrewbeveridge.co.uk" \
       org.label-schema.vcs-url="https://github.com/beveradb/docker-apache-php7-fpm.git"
 
-# Add repository for latest built PHP packages, e.g. 7.1 which isn't otherwise available in Xenial repositories
-RUN add-apt-repository ppa:ondrej/php
+# Initial apt update
+RUN apt update && apt install -y apt-utils
 
 # Install common / shared packages
-RUN apt-get update && apt-get install -y \
+RUN apt install -y \
     curl \
     git \
     zip \
     unzip \
     vim \
-    locales
+    locales \
+    software-properties-common \
+    python-software-properties
 
 # Set up locales
-RUN locale-gen en_GB.UTF-8
-RUN LANG=en_GB.UTF-8
+RUN locale-gen en_US.UTF-8
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
+RUN /usr/sbin/update-locale
+
+# Add repository for latest built PHP packages, e.g. 7.1 which isn't otherwise available in Xenial repositories
+RUN add-apt-repository ppa:ondrej/php
+RUN apt update
 
 # Install PHP 7.1 with FPM and other various commonly used modules, including MySQL client
-RUN apt-get install -y --force-yes php7.1-bcmath php7.1-bz2 php7.1-cli php7.1-common php7.1-curl \
+RUN apt install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
+                php7.1-bcmath php7.1-bz2 php7.1-cli php7.1-common php7.1-curl \
                 php7.1-dev php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl \
                 php7.1-json php7.1-ldap php7.1-mbstring php7.1-mcrypt php7.1-mysql \
                 php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell \
@@ -36,7 +49,7 @@ RUN apt-get install -y --force-yes php7.1-bcmath php7.1-bz2 php7.1-cli php7.1-co
                 libmysqlclient-dev mariadb-client
 
 # Install Apache2 with FastCGI module
-RUN apt-get install -y --force-yes apache2 libapache2-mod-fastcgi apache2-utils apache2-mpm-worker
+RUN apt install -y --force-yes apache2 libapache2-mod-fastcgi apache2-utils
 
 # Modify PHP-FPM configuration files to set common properties and listen on port 9000
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.1/cli/php.ini
@@ -71,7 +84,8 @@ RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/e
 	&& ln -s $HTTPD_PREFIX/mods-available/rewrite.load $HTTPD_PREFIX/mods-enabled/rewrite.load
 
 # Enable Apache modules and configuration
-RUN a2enmod actions fastcgi aliasi proxy_fcgi setenvif
+RUN a2dismod mpm_event
+RUN a2enmod actions fastcgi aliasi proxy_fcgi setenvif mpm_worker
 
 # Clean up apt cache and temp files to save disk space
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
