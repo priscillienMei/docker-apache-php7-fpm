@@ -14,10 +14,10 @@ LABEL maintainer="Andrew Beveridge <andrew@beveridge.uk>" \
       org.label-schema.vcs-url="https://github.com/beveradb/docker-apache-php7-fpm.git"
 
 # Initial apt update
-RUN apt update && apt install -y apt-utils
+RUN apt-get update && apt-get install -y apt-utils
 
 # Install common / shared packages
-RUN apt install -y \
+RUN apt-get install -y \
     curl \
     git \
     zip \
@@ -36,20 +36,21 @@ RUN /usr/sbin/update-locale
 
 # Add repository for latest built PHP packages, e.g. 7.1 which isn't otherwise available in Xenial repositories
 RUN add-apt-repository ppa:ondrej/php
-RUN apt update
+RUN apt-get update
 
 # Install PHP 7.1 with FPM and other various commonly used modules, including MySQL client
-RUN apt install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
+RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
                 php7.1-bcmath php7.1-bz2 php7.1-cli php7.1-common php7.1-curl \
                 php7.1-dev php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl \
                 php7.1-json php7.1-ldap php7.1-mbstring php7.1-mcrypt php7.1-mysql \
                 php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell \
                 php7.1-readline php7.1-recode php7.1-soap php7.1-sqlite3 \
-                php7.1-tidy php7.1-xml php7.1-xmlrpc php7.1-xsl php7.1-zip \
-                libmysqlclient-dev mariadb-client
+                php7.1-tidy php7.1-xml php7.1-xmlrpc php7.1-xsl php7.1-zip
 
-# Install Apache2 with FastCGI module
-RUN apt install -y --force-yes apache2 libapache2-mod-fastcgi apache2-utils
+# Install Apache2 with FastCGI module and MySQL client for convenience
+RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
+                apache2 libapache2-mod-fastcgi apache2-utils \
+                libmysqlclient-dev mariadb-client
 
 # Modify PHP-FPM configuration files to set common properties and listen on port 9000
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.1/cli/php.ini
@@ -85,7 +86,7 @@ RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/e
 
 # Enable Apache modules and configuration
 RUN a2dismod mpm_event
-RUN a2enmod actions fastcgi aliasi proxy_fcgi setenvif mpm_worker
+RUN a2enmod alias actions fastcgi proxy_fcgi setenvif mpm_worker
 
 # Clean up apt cache and temp files to save disk space
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
