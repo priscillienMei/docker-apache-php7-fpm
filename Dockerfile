@@ -52,7 +52,7 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
                 apache2 libapache2-mod-fastcgi apache2-utils \
                 libmysqlclient-dev mariadb-client
 
-# Modify PHP-FPM configuration files to set common properties and listen on port 9000
+# Modify PHP-FPM configuration files to set common properties and listen on socket
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.1/cli/php.ini
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.1/fpm/php.ini
 RUN sed -i "s/display_errors = Off/display_errors = On/" /etc/php/7.1/fpm/php.ini
@@ -62,8 +62,8 @@ RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.1/fpm/php.ini
 
 RUN sed -i -e "s/pid =.*/pid = \/var\/run\/php7.1-fpm.pid/" /etc/php/7.1/fpm/php-fpm.conf
 RUN sed -i -e "s/error_log =.*/error_log = \/proc\/self\/fd\/2/" /etc/php/7.1/fpm/php-fpm.conf
-RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.1/fpm/php-fpm.conf
-RUN sed -i "s/listen = .*/listen = 9000/" /etc/php/7.1/fpm/pool.d/www.conf
+# RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.1/fpm/php-fpm.conf
+RUN sed -i "s/listen = .*/listen = \/var\/run\/php\/php7.1-fpm.sock/" /etc/php/7.1/fpm/pool.d/www.conf
 RUN sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7.1/fpm/pool.d/www.conf
 
 # Install Composer globally
@@ -84,6 +84,10 @@ RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/e
     && ln -s $HTTPD_PREFIX/mods-available/headers.load $HTTPD_PREFIX/mods-enabled/headers.load \
 	&& ln -s $HTTPD_PREFIX/mods-available/rewrite.load $HTTPD_PREFIX/mods-enabled/rewrite.load
 
+# Configure Apache to use our PHP-FPM socket for all PHP files
+COPY php7.1-fpm.conf /etc/apache2/conf-available/php7.1-fpm.conf
+RUN a2enconf php7.1-fpm
+
 # Enable Apache modules and configuration
 RUN a2dismod mpm_event
 RUN a2enmod alias actions fastcgi proxy_fcgi setenvif mpm_worker
@@ -91,8 +95,13 @@ RUN a2enmod alias actions fastcgi proxy_fcgi setenvif mpm_worker
 # Clean up apt cache and temp files to save disk space
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Symlink apache access and error logs to stdout/stderr so Docker logs shows them
+RUN ln -sf /dev/stdout /var/log/apache2/access.log
+RUN ln -sf /dev/stdout /var/log/apache2/other_vhosts_access.log
+RUN ln -sf /dev/stderr /var/log/apache2/error.log
+
 EXPOSE 80
 
-# By default, simply start apache.
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+# Start PHP-FPM worker service and run Apache in foreground so any error output is sent to stdout for Docker logs
+CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
