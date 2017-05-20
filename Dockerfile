@@ -10,6 +10,9 @@ LABEL maintainer="Andrew Beveridge <andrew@beveridge.uk>" \
       org.label-schema.url="https://andrewbeveridge.co.uk" \
       org.label-schema.vcs-url="https://github.com/beveradb/docker-apache-php7-fpm.git"
 
+# Add repository for latest built PHP packages, e.g. 7.1 which isn't otherwise available in Xenial repositories
+RUN add-apt-repository ppa:ondrej/php
+
 # Install common / shared packages
 RUN apt-get update && apt-get install -y \
     curl \
@@ -17,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     vim \
-    locale-gen
+    locales
 
 # Set up locales
 RUN locale-gen en_GB.UTF-8
@@ -69,9 +72,6 @@ RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/e
 
 # Enable Apache modules and configuration
 RUN a2enmod actions fastcgi aliasi proxy_fcgi setenvif
-
-#COPY php7.1-fpm.conf /etc/apache2/conf-available/php7.1-fpm.conf
-#RUN a2enconf php7.1-fpm
 
 # Clean up apt cache and temp files to save disk space
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
