@@ -13,9 +13,6 @@ LABEL maintainer="tecfu <>" \
       org.label-schema.url="https://twitter.com/tecfu0" \
       org.label-schema.vcs-url="https://github.com/tecfu/docker-apache-php7-fpm.git"
 
-# Vim 8
-RUN add-apt-repository ppa:pi-rho/dev
-
 # Install nodejs repo
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
@@ -37,6 +34,10 @@ RUN apt-get install -y \
 
 # Install grunt
 RUN npm install grunt-cli -g
+
+# Vim 8
+RUN add-apt-repository ppa:pi-rho/dev
+RUN apt-get update && apt-get install -y vim
 
 # Set up locales
 RUN locale-gen en_US.UTF-8
