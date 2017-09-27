@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
-MAINTAINER Andrew Beveridge <andrew@beveridge.uk>
+MAINTAINER tecfu <>
 
-ENV REFRESHED_AT 2017-05-20
+ENV REFRESHED_AT 2017-09-27
 ENV HTTPD_PREFIX /etc/apache2
 
 # Suppress warnings from apt about lack of Dialog
@@ -12,6 +12,12 @@ LABEL maintainer="tecfu <>" \
       org.label-schema.name="Ubuntu 16.04 with Apache2.4 and PHP 7, optimised using PHP-FPM" \
       org.label-schema.url="https://twitter.com/tecfu0" \
       org.label-schema.vcs-url="https://github.com/tecfu/docker-apache-php7-fpm.git"
+
+# Vim 8
+RUN add-apt-repository ppa:pi-rho/dev
+
+# Install nodejs repo
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
 # Initial apt update
 RUN apt-get update && apt-get install -y apt-utils
@@ -25,7 +31,12 @@ RUN apt-get install -y \
     vim \
     locales \
     software-properties-common \
-    python-software-properties
+    python-software-properties \
+    vim \
+    nodejs
+
+# Install grunt
+RUN npm install grunt-cli -g
 
 # Set up locales
 RUN locale-gen en_US.UTF-8
@@ -100,8 +111,16 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log
 RUN ln -sf /dev/stdout /var/log/apache2/other_vhosts_access.log
 RUN ln -sf /dev/stderr /var/log/apache2/error.log
 
-EXPOSE 80
+# EXPOSE 80 9000 3000
 
 # Start PHP-FPM worker service and run Apache in foreground so any error output is sent to stdout for Docker logs
 CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
+
+# Terminal, Vim Customization
+WORKDIR "~"
+RUN mv .bashrc .bashrc.saved
+RUN git clone https://github.com/tecfu/dotfiles
+RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
+RUN mv .inputrc .inputrc.saved
+RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
