@@ -2,7 +2,7 @@
 
 Simple Dockerfile to setup Ubuntu 16.04 with Apache2.4 and PHP 7, optimised using PHP-FPM
 
-- To view the build image on [docker hub](https://hub.docker.com) [see](https://hub.docker.com/r/tecfu/docker-apache-php7-fpm)
+- View the build image on [dockerhub](https://hub.docker.com/r/tecfu/docker-apache-php7-fpm).
 
 Used elements of the following resources:
 * https://hub.docker.com/r/silintl/php7/~/dockerfile/
