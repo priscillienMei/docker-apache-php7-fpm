@@ -7,11 +7,11 @@ ENV HTTPD_PREFIX /etc/apache2
 # Suppress warnings from apt about lack of Dialog
 ENV DEBIAN_FRONTEND noninteractive
 
-LABEL maintainer="Andrew Beveridge <andrew@beveridge.uk>" \
+LABEL maintainer="tecfu <>" \
       org.label-schema.docker.dockerfile="/Dockerfile" \
       org.label-schema.name="Ubuntu 16.04 with Apache2.4 and PHP 7, optimised using PHP-FPM" \
-      org.label-schema.url="https://andrewbeveridge.co.uk" \
-      org.label-schema.vcs-url="https://github.com/beveradb/docker-apache-php7-fpm.git"
+      org.label-schema.url="https://twitter.com/tecfu0" \
+      org.label-schema.vcs-url="https://github.com/tecfu/docker-apache-php7-fpm.git"
 
 # Initial apt update
 RUN apt-get update && apt-get install -y apt-utils
@@ -50,7 +50,7 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
 # Install Apache2 with FastCGI module and MySQL client for convenience
 RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
                 apache2 libapache2-mod-fastcgi apache2-utils \
-                libmysqlclient-dev mariadb-client
+                libmysqlclient-dev mysql-client
 
 # Modify PHP-FPM configuration files to set common properties and listen on socket
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.1/cli/php.ini
@@ -61,7 +61,7 @@ RUN sed -i "s/post_max_size = .*/post_max_size = 12M/" /etc/php/7.1/fpm/php.ini
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.1/fpm/php.ini
 
 RUN sed -i -e "s/pid =.*/pid = \/var\/run\/php7.1-fpm.pid/" /etc/php/7.1/fpm/php-fpm.conf
-RUN sed -i -e "s/error_log =.*/error_log = \/proc\/self\/fd\/2/" /etc/php/7.1/fpm/php-fpm.conf
+#RUN sed -i -e "s/error_log =.*/error_log = \/proc\/self\/fd\/2/" /etc/php/7.1/fpm/php-fpm.conf
 # RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.1/fpm/php-fpm.conf
 RUN sed -i "s/listen = .*/listen = \/var\/run\/php\/php7.1-fpm.sock/" /etc/php/7.1/fpm/pool.d/www.conf
 RUN sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7.1/fpm/pool.d/www.conf
