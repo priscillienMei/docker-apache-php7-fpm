@@ -13,9 +13,6 @@ LABEL maintainer="tecfu <>" \
       org.label-schema.url="https://twitter.com/tecfu0" \
       org.label-schema.vcs-url="https://github.com/tecfu/docker-apache-php7-fpm.git"
 
-# Install nodejs repo
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
-
 # Initial apt update
 RUN apt-get update && apt-get install -y apt-utils
 
@@ -25,19 +22,9 @@ RUN apt-get install -y \
     git \
     zip \
     unzip \
-    vim \
     locales \
     software-properties-common \
-    python-software-properties \
-    vim \
-    nodejs
-
-# Install grunt
-RUN npm install grunt-cli -g
-
-# Vim 8
-RUN add-apt-repository ppa:pi-rho/dev
-RUN apt-get update && apt-get install -y vim
+    python-software-properties 
 
 # Set up locales
 RUN locale-gen en_US.UTF-8
@@ -46,7 +33,15 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 RUN /usr/sbin/update-locale
 
-# Add repository for latest built PHP packages, e.g. 7.1 which isn't otherwise available in Xenial repositories
+# Add repositories 
+
+# nodejs repo
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
+
+# Vim 8 repo
+RUN add-apt-repository ppa:pi-rho/dev
+
+# PHP repo
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update
 
@@ -86,15 +81,15 @@ RUN curl -S https://getcomposer.org/installer | php \
 # Remove default Apache VirtualHost, configs, and mods not needed
 WORKDIR $HTTPD_PREFIX
 RUN rm -f \
-    	sites-enabled/000-default.conf \
-    	conf-enabled/serve-cgi-bin.conf \
-    	mods-enabled/autoindex.conf \
-    	mods-enabled/autoindex.load
+      sites-enabled/000-default.conf \
+      conf-enabled/serve-cgi-bin.conf \
+      mods-enabled/autoindex.conf \
+      mods-enabled/autoindex.load
 
 # Enable additional configs and mods
 RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/expires.load \
-    && ln -s $HTTPD_PREFIX/mods-available/headers.load $HTTPD_PREFIX/mods-enabled/headers.load \
-	&& ln -s $HTTPD_PREFIX/mods-available/rewrite.load $HTTPD_PREFIX/mods-enabled/rewrite.load
+  && ln -s $HTTPD_PREFIX/mods-available/headers.load $HTTPD_PREFIX/mods-enabled/headers.load \
+  && ln -s $HTTPD_PREFIX/mods-available/rewrite.load $HTTPD_PREFIX/mods-enabled/rewrite.load
 
 # Configure Apache to use our PHP-FPM socket for all PHP files
 COPY php7.1-fpm.conf /etc/apache2/conf-available/php7.1-fpm.conf
@@ -125,3 +120,6 @@ RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
 RUN mv .inputrc .inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
+RUN apt-get install vim \
+                    nodejs 
+RUN npm i -g grunt-cli
