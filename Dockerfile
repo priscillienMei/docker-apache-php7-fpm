@@ -117,7 +117,8 @@ WORKDIR "~"
 RUN mv ~/.bashrc ~/.bashrc.saved
 RUN git clone https://github.com/tecfu/dotfiles
 RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
-RUN mv ~/.inputrc ~/.inputrc.saved
+#Does not exist
+#RUN mv ~/.inputrc ~/.inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
 RUN apt-get install vim \
