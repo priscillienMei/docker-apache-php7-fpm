@@ -114,10 +114,10 @@ CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
 WORKDIR "~"
-RUN mv .bashrc .bashrc.saved
+RUN mv ~/.bashrc ~/.bashrc.saved
 RUN git clone https://github.com/tecfu/dotfiles
 RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
-RUN mv .inputrc .inputrc.saved
+RUN mv ~/.inputrc ~/.inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
 RUN apt-get install vim \
