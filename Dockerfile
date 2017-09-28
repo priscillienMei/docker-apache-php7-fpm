@@ -39,10 +39,10 @@ RUN /usr/sbin/update-locale
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
 # Vim 8 repo
-RUN add-apt-repository ppa:pi-rho/dev
+RUN add-apt-repository -y ppa:pi-rho/dev
 
 # PHP repo
-RUN add-apt-repository ppa:ondrej/php
+RUN add-apt-repository -y ppa:ondrej/php
 RUN apt-get update
 
 # Install PHP 7.1 with FPM and other various commonly used modules, including MySQL client
