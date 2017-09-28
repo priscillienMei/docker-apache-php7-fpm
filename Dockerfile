@@ -121,6 +121,7 @@ RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
 #RUN mv ~/.inputrc ~/.inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
-RUN apt-get install vim \
-                    nodejs 
+RUN apt-get install -y vim \
+  nodejs 
+
 RUN npm i -g grunt-cli
