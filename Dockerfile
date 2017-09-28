@@ -124,3 +124,7 @@ RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 RUN apt-get install -y vim 
 #RUN apt-get install -y nodejs 
 #RUN npm i -g grunt-cli
+
+# Change apache's index priority
+RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Directory>" \
+  >> /etc/apache2/apache2.conf
