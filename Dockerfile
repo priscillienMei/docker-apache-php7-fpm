@@ -119,9 +119,8 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
-WORKDIR "~"
 RUN mv ~/.bashrc ~/.bashrc.saved
-RUN git clone https://github.com/tecfu/dotfiles
+RUN git clone https://github.com/tecfu/dotfiles ~/dotfiles
 # Create symlinks to bash config
 RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
