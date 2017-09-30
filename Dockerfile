@@ -140,17 +140,17 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
+RUN mv $HOME/.bashrc $HOME/.bashrc.saved
 WORKDIR $HOME
-RUN mv ~/.bashrc ~/.bashrc.saved
 RUN git clone https://github.com/tecfu/dotfiles 
 # Create symlinks to bash config
-RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
-RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
+RUN ln -s $HOME/dotfiles/terminal/.bashrc $HOME/.bashrc
+RUN ln -s $HOME/dotfiles/terminal/.inputrc $HOME/.inputrc
 
 # Vim
 # Create symlinks to vim config
-RUN ln -s ~/dotfiles/.vim ~/.vim
-RUN ln -s ~/dotfiles/.vim/.vimrc ~/.vimrc
+RUN ln -s $HOME/dotfiles/.vim $HOME/.vim
+RUN ln -s $HOME/dotfiles/.vim/.vimrc $HOME/.vimrc
 
 # Change apache's index priority
 RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Directory>" \
