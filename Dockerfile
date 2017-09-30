@@ -69,6 +69,8 @@ RUN ./configure --with-features=huge \
             --prefix=/usr/local
 RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
 RUN make install
+# Install Vim plugins
+RUN vim +PlugInstall +qall 
 #RUN apt-get install -y vim 
 
 # Install tmux
