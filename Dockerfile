@@ -71,7 +71,7 @@ RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
 #RUN apt-get install -y vim 
 
 # Install tmux
-RUN apt-get install tmux
+RUN apt-get -y install tmux
 
 # Install nodejs, grunt
 RUN apt-get install -y nodejs 
