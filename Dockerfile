@@ -40,7 +40,6 @@ RUN /usr/sbin/update-locale
 # nodejs repo
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
-# Vim 8 repo
 # RUN add-apt-repository -y ppa:pi-rho/dev
 
 # PHP repo
@@ -48,13 +47,12 @@ RUN add-apt-repository -y ppa:ondrej/php
 
 RUN apt-get update
 
-WORKDIR $HOME
-
 # Install vim 8 custom build
 RUN apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev \
     libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
     libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev \
     python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev git
+WORKDIR $HOME
 RUN git clone https://github.com/vim/vim.git
 RUN ./configure --with-features=huge \
             --enable-multibyte \
@@ -70,6 +68,9 @@ RUN ./configure --with-features=huge \
             --prefix=/usr/local
 RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
 #RUN apt-get install -y vim 
+
+# Install tmux
+RUN apt-get install tmux
 
 # Install nodejs, grunt
 RUN apt-get install -y nodejs 
@@ -140,10 +141,11 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
-RUN mv $HOME/.bashrc $HOME/.bashrc.saved
 WORKDIR $HOME
 RUN git clone https://github.com/tecfu/dotfiles 
+
 # Create symlinks to bash config
+RUN mv $HOME/.bashrc $HOME/.bashrc.saved
 RUN ln -s $HOME/dotfiles/terminal/.bashrc $HOME/.bashrc
 RUN ln -s $HOME/dotfiles/terminal/.inputrc $HOME/.inputrc
 
