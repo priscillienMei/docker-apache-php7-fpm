@@ -7,6 +7,7 @@ ENV HTTPD_PREFIX /etc/apache2
 # Dont prompt for any installs
 # The ARG directive sets variables that only live during the build
 ARG DEBIAN_FRONTEND=noninteractive
+ARG HOME="/root"
 
 LABEL maintainer="tecfu <>" \
       org.label-schema.docker.dockerfile="/Dockerfile" \
@@ -47,13 +48,15 @@ RUN add-apt-repository -y ppa:ondrej/php
 
 RUN apt-get update
 
-# Install vim 8
+WORKDIR $HOME
+
+# Install vim 8 custom build
 RUN apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev \
     libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
     libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev \
     python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev git
-RUN git clone https://github.com/vim/vim.git ~/vim
-RUN -w="~" ./configure --with-features=huge \
+RUN git clone https://github.com/vim/vim.git
+RUN ./configure --with-features=huge \
             --enable-multibyte \
             --enable-rubyinterp=yes \
  #           --enable-pythoninterp=yes \
@@ -65,7 +68,7 @@ RUN -w="~" ./configure --with-features=huge \
  #           --enable-gui=gtk2 \
             --enable-cscope \
             --prefix=/usr/local
-RUN -w="~" make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
+RUN make VIMRUNTIMEDIR=/usr/local/share/vim/vim80
 #RUN apt-get install -y vim 
 
 # Install nodejs, grunt
@@ -137,8 +140,9 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
+WORKDIR $HOME
 RUN mv ~/.bashrc ~/.bashrc.saved
-RUN git clone https://github.com/tecfu/dotfiles ~/dotfiles
+RUN git clone https://github.com/tecfu/dotfiles 
 # Create symlinks to bash config
 RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
