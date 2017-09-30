@@ -130,9 +130,6 @@ RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 # Create symlinks to vim config
 RUN ln -s ~/dotfiles/.vim ~/.vim
 RUN ln -s ~/dotfiles/.vim/.vimrc ~/.vimrc
-# Install vim-plug
-RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Change apache's index priority
 RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Directory>" \
