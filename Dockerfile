@@ -54,6 +54,7 @@ RUN apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev \
     python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev git
 WORKDIR $HOME
 RUN git clone https://github.com/vim/vim.git
+WORKDIR $HOME/vim
 RUN ./configure --with-features=huge \
             --enable-multibyte \
             --enable-rubyinterp=yes \
