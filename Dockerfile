@@ -122,10 +122,17 @@ CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 WORKDIR "~"
 RUN mv ~/.bashrc ~/.bashrc.saved
 RUN git clone https://github.com/tecfu/dotfiles
+# Create symlinks to bash config
 RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
-#Does not exist
-#RUN mv ~/.inputrc ~/.inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
+
+# Vim
+# Create symlinks to vim config
+RUN ln -s ~/dotfiles/.vim ~/.vim
+RUN ln -s ~/dotfiles/.vim/.vimrc ~/.vimrc
+# Install vim-plug
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Change apache's index priority
 RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Directory>" \
