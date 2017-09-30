@@ -4,8 +4,9 @@ MAINTAINER tecfu <>
 ENV REFRESHED_AT 2017-09-27
 ENV HTTPD_PREFIX /etc/apache2
 
-# Suppress warnings from apt about lack of Dialog
-ENV DEBIAN_FRONTEND noninteractive
+# Dont prompt for any installs
+# The ARG directive sets variables that only live during the build
+ARG DEBIAN_FRONTEND=noninteractive
 
 LABEL maintainer="tecfu <>" \
       org.label-schema.docker.dockerfile="/Dockerfile" \
@@ -43,7 +44,15 @@ RUN add-apt-repository -y ppa:pi-rho/dev
 
 # PHP repo
 RUN add-apt-repository -y ppa:ondrej/php
+
 RUN apt-get update
+
+# Install vim 8
+RUN apt-get install -y vim 
+
+# Install nodejs, grunt
+RUN apt-get install -y nodejs 
+RUN npm i -g grunt-cli
 
 # Install PHP 7.1 with FPM and other various commonly used modules, including MySQL client
 RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
@@ -99,9 +108,6 @@ RUN a2enconf php7.1-fpm
 RUN a2dismod mpm_event
 RUN a2enmod alias actions fastcgi proxy_fcgi setenvif mpm_worker
 
-# Clean up apt cache and temp files to save disk space
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Symlink apache access and error logs to stdout/stderr so Docker logs shows them
 RUN ln -sf /dev/stdout /var/log/apache2/access.log
 RUN ln -sf /dev/stdout /var/log/apache2/other_vhosts_access.log
@@ -121,10 +127,9 @@ RUN ln -s ~/dotfiles/terminal/.bashrc ~/.bashrc
 #RUN mv ~/.inputrc ~/.inputrc.saved
 RUN ln -s ~/dotfiles/terminal/.inputrc ~/.inputrc
 
-#RUN apt-get install -y vim 
-#RUN apt-get install -y nodejs 
-#RUN npm i -g grunt-cli
-
 # Change apache's index priority
 RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Directory>" \
   >> /etc/apache2/apache2.conf
+
+# Clean up apt cache and temp files to save disk space
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
