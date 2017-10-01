@@ -171,4 +171,6 @@ RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Director
 RUN apt-get clean && apt-get autoremove -y
 
 # Run the following scripts when container is started
-ENTRYPOINT ["boot.sh"]
+COPY ./boot.sh $HOME/boot.sh
+RUN chmod +x $HOME/boot.sh
+ENTRYPOINT $HOME"/boot.sh"
