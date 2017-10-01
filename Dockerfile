@@ -1,8 +1,14 @@
 FROM ubuntu:16.04
 MAINTAINER tecfu <>
 
-ENV REFRESHED_AT 2017-09-27
-ENV HTTPD_PREFIX /etc/apache2
+ENV REFRESHED_AT 2017-09-30
+ENV HTTPD_PREFIX /etc/apache2 \
+        APACHE_RUN_USER=www-data \
+        APACHE_RUN_GROUP=www-data \
+        APACHE_LOG_DIR=/var/log/apache2 \
+        APACHE_LOCK_DIR=/var/lock/apache2 \
+        APACHE_RUN_DIR=/var/run/apache2 \
+        APACHE_PID_FILE=/var/run/apache2.pid 
 
 # Dont prompt for any installs
 # The ARG directive sets variables that only live during the build
@@ -141,8 +147,6 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 
 # EXPOSE 80 9000 3000
 
-# Start PHP-FPM worker service and run Apache in foreground so any error output is sent to stdout for Docker logs
-CMD service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 # Terminal, Vim Customization
 WORKDIR $HOME
@@ -165,3 +169,6 @@ RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Director
 # Clean up apt cache and temp files to save disk space
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN apt-get clean && apt-get autoremove -y
+
+# Run the following scripts when container is started
+ENTRYPOINT ["boot.sh"]
