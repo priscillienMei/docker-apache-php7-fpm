@@ -2,13 +2,13 @@ FROM ubuntu:16.04
 MAINTAINER tecfu <>
 
 ENV REFRESHED_AT 2017-09-30
-ENV HTTPD_PREFIX /etc/apache2 \
-        APACHE_RUN_USER=www-data \
-        APACHE_RUN_GROUP=www-data \
-        APACHE_LOG_DIR=/var/log/apache2 \
-        APACHE_LOCK_DIR=/var/lock/apache2 \
-        APACHE_RUN_DIR=/var/run/apache2 \
-        APACHE_PID_FILE=/var/run/apache2.pid 
+ENV HTTPD_PREFIX=/etc/apache2 \ 
+    APACHE_RUN_USER=www-data \
+    APACHE_RUN_GROUP=www-data \
+    APACHE_LOG_DIR=/var/log/apache2 \
+    APACHE_LOCK_DIR=/var/lock/apache2 \
+    APACHE_RUN_DIR=/var/run/apache2 \
+    APACHE_PID_FILE=/var/run/apache2.pid 
 
 # Dont prompt for any installs
 # The ARG directive sets variables that only live during the build
