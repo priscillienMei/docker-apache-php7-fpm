@@ -114,6 +114,9 @@ RUN sed -i -e "s/pid =.*/pid = \/var\/run\/php7.1-fpm.pid/" /etc/php/7.1/fpm/php
 RUN sed -i "s/listen = .*/listen = \/var\/run\/php\/php7.1-fpm.sock/" /etc/php/7.1/fpm/pool.d/www.conf
 RUN sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7.1/fpm/pool.d/www.conf
 
+# Append error log value for PHP-CLI scripts
+RUN echo "error_log = /var/log/php_errors.log" >> /etc/php/7.1/cli/php.ini
+
 # Install Composer globally
 RUN curl -S https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
