@@ -116,6 +116,7 @@ RUN sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7
 
 # Append error log value for PHP-CLI scripts
 RUN echo "error_log = /var/log/php_cli_errors.log" >> /etc/php/7.1/cli/php.ini
+RUN touch /var/log/php_cli_errors.log 
 
 # Install Composer globally
 RUN curl -S https://getcomposer.org/installer | php \
