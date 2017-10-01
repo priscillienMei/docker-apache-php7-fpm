@@ -8,7 +8,7 @@ ENV HTTPD_PREFIX=/etc/apache2 \
     APACHE_LOG_DIR=/var/log/apache2 \
     APACHE_LOCK_DIR=/var/lock/apache2 \
     APACHE_RUN_DIR=/var/run/apache2 \
-    APACHE_PID_FILE=/var/run/apache2.pid 
+    APACHE_PID_FILE=/var/run/apache2/apache2.pid 
 
 # Dont prompt for any installs
 # The ARG directive sets variables that only live during the build
