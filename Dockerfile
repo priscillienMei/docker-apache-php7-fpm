@@ -164,3 +164,4 @@ RUN echo "<Directory /var/www/>\nDirectoryIndex index.php index.html\n</Director
 
 # Clean up apt cache and temp files to save disk space
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && apt-get autoremove -y
