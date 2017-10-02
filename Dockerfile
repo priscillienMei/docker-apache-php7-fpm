@@ -83,7 +83,8 @@ RUN make install
 RUN apt-get -y install tmux
 
 # Install Universal CTAGS
-RUN git clone https://github.com/universal-ctags/ctags ~/ctags
+WORKDIR $HOME
+RUN git clone https://github.com/universal-ctags/ctags
 WORKDIR $HOME/ctags
 RUN ./configure
 RUN make
