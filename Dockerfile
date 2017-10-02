@@ -82,6 +82,13 @@ RUN make install
 # Install tmux
 RUN apt-get -y install tmux
 
+# Install Universal CTAGS
+RUN git clone https://github.com/universal-ctags/ctags ~/ctags
+WORKDIR $HOME/ctags
+RUN ./configure
+RUN make
+RUN make install
+
 # Install nodejs, grunt
 RUN apt-get install -y nodejs 
 RUN npm i -g grunt-cli
