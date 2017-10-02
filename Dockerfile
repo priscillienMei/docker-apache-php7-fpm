@@ -86,6 +86,7 @@ RUN apt-get -y install tmux
 WORKDIR $HOME
 RUN git clone https://github.com/universal-ctags/ctags
 WORKDIR $HOME/ctags
+RUN ./autogen.sh
 RUN ./configure
 RUN make
 RUN make install
