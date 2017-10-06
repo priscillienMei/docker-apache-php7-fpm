@@ -91,9 +91,10 @@ RUN ./configure
 RUN make
 RUN make install
 
-# Install nodejs, grunt
+# Install nodejs, grunt, pm2 for API daemonization
 RUN apt-get install -y nodejs 
 RUN npm i -g grunt-cli
+RUN npm i -g pm2
 
 # Install PHP 7.1 with FPM and other various commonly used modules, including MySQL client
 RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
