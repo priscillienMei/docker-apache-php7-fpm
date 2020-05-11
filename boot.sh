@@ -10,6 +10,6 @@ if [ -f "$APACHE_PID_FILE" ]; then
 fi
 
 # Start PHP-FPM worker service and run Apache in foreground so any error output is sent to stdout for Docker logs
-service php7.1-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
+service php7.3-fpm start && /usr/sbin/apache2ctl -D FOREGROUND
 
 #/usr/sbin/apache2ctl -D FOREGROUND

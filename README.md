@@ -1,10 +1,17 @@
 # Docker Image: tecfu/docker-apache-php7-fpm
 
-Simple Dockerfile to setup Ubuntu 16.04 with Apache2.4 and PHP 7, optimised using PHP-FPM
+Dockerfile to setup: 
+  - Ubuntu 20.04 
+  - Apache2.4 
+  - PHP 7.3 optimised using PHP-FPM
+  - Node 12
+  - pm2 (to manage php daemons)
 
-- View the build image on [dockerhub](https://hub.docker.com/r/tecfu/docker-apache-php7-fpm).
+---
 
-Used elements of the following resources:
+You can view the build image on [dockerhub](https://hub.docker.com/r/tecfu/docker-apache-php7-fpm).
+
+Uses elements of the following resources:
 * https://hub.docker.com/r/silintl/php7/~/dockerfile/
 * https://hub.docker.com/r/khanhicetea/php7-fpm-docker/~/dockerfile/
 * https://github.com/smrutiranjantripathy/apache-php-fpm/blob/master/Dockerfile
@@ -14,4 +21,3 @@ Used elements of the following resources:
 - Thanks to:
 
 beveradb/docker-apache-php7-fpm
-
