@@ -1,4 +1,4 @@
-# Docker Image: tecfu/docker-apache-php7.'-fpm
+# Docker Image: tecfu/docker-apache-php7.4-fpm
 
 Dockerfile to setup: 
   - Ubuntu 20.04 
