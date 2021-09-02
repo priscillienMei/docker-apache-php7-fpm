@@ -1,9 +1,9 @@
-# Docker Image: tecfu/docker-apache-php7-fpm
+# Docker Image: tecfu/docker-apache-php7.'-fpm
 
 Dockerfile to setup: 
   - Ubuntu 20.04 
   - Apache2.4 
-  - PHP 7.3 optimised using PHP-FPM
+  - PHP 7.4 optimised using PHP-FPM
   - Node 12
   - pm2 (to manage php daemons)
 
