@@ -43,7 +43,7 @@ RUN /usr/sbin/update-locale
 # Add repositories 
 
 # nodejs repo
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+#RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # RUN add-apt-repository -y ppa:pi-rho/dev
 
@@ -63,8 +63,8 @@ RUN apt install vim -y
 RUN apt-get -y install tmux
 
 # Install nodejs, pm2 for API daemonization
-RUN apt-get install -y nodejs 
-RUN npm install pm2 -g
+#RUN apt-get install -y nodejs 
+#RUN npm install pm2 -g
 
 # Install PHP 7.4 with FPM and other various commonly used modules, including MySQL client
 RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
@@ -99,9 +99,9 @@ RUN echo "error_log = /var/log/php_cli_errors.log" >> /etc/php/7.4/cli/php.ini
 RUN touch /var/log/php_cli_errors.log 
 
 # Install Composer globally
-RUN curl -S https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod a+x /usr/local/bin/composer
+#RUN curl -S https://getcomposer.org/installer | php \
+#    && mv composer.phar /usr/local/bin/composer \
+#    && chmod a+x /usr/local/bin/composer
 
 # Remove default Apache VirtualHost, configs, and mods not needed
 WORKDIR $HTTPD_PREFIX
@@ -117,7 +117,7 @@ RUN ln -s $HTTPD_PREFIX/mods-available/expires.load $HTTPD_PREFIX/mods-enabled/e
   && ln -s $HTTPD_PREFIX/mods-available/rewrite.load $HTTPD_PREFIX/mods-enabled/rewrite.load
 
 # Configure Apache to use our PHP-FPM socket for all PHP files
-COPY php7.4-fpm.conf /etc/apache2/conf-available/php7.3-fpm.conf
+COPY php7.4-fpm.conf /etc/apache2/conf-available/php7.4-fpm.conf
 RUN a2enconf php7.4-fpm
 
 # Enable Apache modules and configuration
